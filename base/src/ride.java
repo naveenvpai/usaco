@@ -7,8 +7,8 @@ import java.io.*;
 import java.util.HashMap;
 
 class ride {
-    static char[] ALPHABET = new char[]{'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
-    static HashMap<Character, Integer> LETTER_MAP;
+    private static char[] ALPHABET = new char[]{'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
+    private static HashMap<Character, Integer> LETTER_MAP;
     public static void main(String[] args) {
         try {
             initializeCharMap();
@@ -33,15 +33,15 @@ class ride {
     private static int decode(String text) {
         int prod = 1;
         for (int i = 0; i < text.length(); i++) {
-            Integer val = (Integer)LETTER_MAP.get(new Character(text.charAt(i)));
-            prod *= val.intValue();
+            Integer val = LETTER_MAP.get(text.charAt(i));
+            prod *= val;
         }
         return prod%47;
     }
     private static void initializeCharMap() {
         LETTER_MAP = new HashMap<Character, Integer>();
         for (int i = 0; i < ALPHABET.length; i++) {
-            LETTER_MAP.put(new Character(ALPHABET[i]), new Integer(i+1));
+            LETTER_MAP.put(ALPHABET[i], i+1);
         }
     }
 }

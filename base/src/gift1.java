@@ -38,7 +38,7 @@ public class gift1 {
                     }
                 }
                 for (int i = 0; i < numFriends; i++) {
-                    out.print(friendList[i]+" "+Integer.valueOf(profits.get(friendList[i])).toString()+"\n");
+                    out.print(friendList[i]+" "+profits.get(friendList[i])+"\n");
                 }
 
                 out.close();
