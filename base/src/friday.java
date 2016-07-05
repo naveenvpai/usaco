@@ -48,6 +48,7 @@ public class friday {
     }
 
     private static int dayOfTheWeek(int day) {
+        //Offset considering that the first day is a Monday which should be index 2
         return (day+1)%7;
     }
 }
