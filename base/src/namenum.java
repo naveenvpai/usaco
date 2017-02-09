@@ -10,6 +10,7 @@ import java.util.*;
 
 Parse.
 Find valid names using possible letter representations of a 1-12 digit sequence on a TouchTone sequence.
+IF NONE ARE FOUND PRINT NONE.
 
 Contextualize.
 There are 3^n possible letter sequences resulting from a serial number with n in [1,12].
