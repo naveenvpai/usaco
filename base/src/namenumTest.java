@@ -1,3 +1,4 @@
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.*;
@@ -7,10 +8,17 @@ import static org.testng.Assert.*;
  */
 public class namenumTest {
 
-    @Test
-    public void testGetSerialNumber() {
-        assertEquals(namenum.getSerialNumber("GREG"), "4734");
-        assertEquals(namenum.getSerialNumber("NAVEEN"), "628336");
-        assertEquals(namenum.getSerialNumber("KENT"), "5368");
+    @DataProvider(name = "serial")
+    public Object[][] serialNumberProvider() {
+        return new Object[][] {
+                { "GREG", "4734" },
+                { "NAVEEN", "628336" },
+                { "KENT", "5368" }
+        };
+    }
+
+    @Test(dataProvider = "serial")
+    public void testGetSerialNumber(String name, String serial) {
+        assertEquals(namenum.getSerialNumber(name), serial);
     }
 }
