@@ -12,15 +12,20 @@ Parse.
 Find valid names using possible letter representations of a 1-12 digit sequence on a TouchTone sequence.
 
 Contextualize.
-There are 3^n possible letter sequences resulting from a serial number with n in [1,12]
+There are 3^n possible letter sequences resulting from a serial number with n in [1,12].
 There are 5,000 names to search.
 
 Solution ideas.
 brute force: find all possible sequences and validate each.
 alphabetical: check if there are valid names starting with the substring you generate as you creat each sequence.
-data dump: find the serial numbers corresponding to each valid name and find all matching the given serial number
+data dump: find the serial numbers corresponding to each valid name and find all matching the given serial number.
 
+Check.
+remembered to print corresponding valid name instead of just the serial.
 
+Errors.
+incorrect filename for dict.txt.
+forgot to print NONE if necessary.
  */
 public class  namenum {
 
@@ -56,12 +61,19 @@ public class  namenum {
     public static void main(String[] args) {
         try {
             try {
-                BufferedReader f    = new BufferedReader(new FileReader("namenum.in"));
-                PrintWriter out     = new PrintWriter(new BufferedWriter(new FileWriter("namenum.out")));
-                String serial = f.readLine();
-                for (int i = 0; i < serial.length(); i++) {
-
+                BufferedReader f = new BufferedReader(new FileReader("namenum.in"));
+                PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("namenum.out")));
+                String mySerial = f.readLine();
+                ArrayList<String> validNames = getValidNames("dict.txt");
+                ArrayList<String> validSerials = getValidSerials(validNames);
+                boolean foundMatch = false;
+                for (int i = 0; i < validSerials.size(); i++) {
+                    if (validSerials.get(i).equals(mySerial)) {
+                        out.println(validNames.get(i));
+                        foundMatch = true;
+                    }
                 }
+                if (!foundMatch) out.println("NONE");
                 out.close();
             }
             catch (Exception e) {
@@ -76,7 +88,30 @@ public class  namenum {
     public static String getSerialNumber(String name) {
         String retVal = "";
         for (int i = 0; i < name.length(); i++) {
-            retVal += name.substring(i,i+1);
+            retVal += letterToKey.get(name.substring(i,i+1));
+        }
+        return retVal;
+    }
+
+    public static ArrayList<String> getValidNames(String fileName) {
+        ArrayList<String> retVal = new ArrayList<>();
+        try {
+            BufferedReader f = new BufferedReader(new FileReader(fileName));
+            while (f.ready()) {
+                retVal.add(f.readLine());
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return retVal;
+    }
+
+    public static ArrayList<String> getValidSerials(ArrayList<String> validNames) {
+        ArrayList<String> retVal = new ArrayList<>();
+        for (String valid : validNames) {
+            retVal.add(getSerialNumber(valid));
         }
         return retVal;
     }
