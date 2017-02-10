@@ -2,3 +2,4 @@
 base.iml
 *.in
 *.out
+*.class
