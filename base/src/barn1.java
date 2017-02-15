@@ -21,7 +21,7 @@ Use the greedy approach specified in the reading: keep removing boards
 Errors.
 Assumed ordered indices.
 Subtracted the gaps from S while really needed to be subtracted from the max-min range.
-Next time, use method stubs to organize thinking. 
+Next time, use method stubs and paper to organize thinking. 
 */
 
 public class barn1 {
