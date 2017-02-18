@@ -7,6 +7,17 @@ TASK: <title>
 import java.io.*;
 import java.util.*;
 
+/*
+Parse.
+
+Contextualize.
+
+Solution ideas.
+
+Errors.
+
+*/
+
 public class <title> {
     public static void main(String[] args) {
         try {
