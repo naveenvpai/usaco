@@ -1,4 +1,5 @@
 import org.testng.annotations.DataProvider;
+import org.testng.annotations.ObjectFactory;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.*;
@@ -24,7 +25,9 @@ public class crypt1Test {
     public Object[][] cryptSolvedProvider() {
         return new Object[][] {
                 {"23468", "222", "22", true},
-                {"23468", "322", "22", false}
+                {"23468", "328", "88", false},
+                {"23468", "423", "82", false},
+                {"23468", "436", "88", false},
         };
     }
 
