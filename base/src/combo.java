@@ -23,14 +23,12 @@ Generate the valid combos for each (represented as Strings), put them all in a S
 Brute force using permutations code: n^3
 
 Errors.
-Brute force doesn't meet time constraint: permutation generation is the problem
-
+Brute force doesn't meet time constraint: permutation generation is the problem.
+Represented combo as string, even though dial values may be more than one digit: changed to int array
 */
 
 public class combo {
-
     static int n;
-
     public static void main(String[] args) {
         try {
             try {
@@ -38,21 +36,21 @@ public class combo {
                 PrintWriter out     = new PrintWriter(new BufferedWriter(new FileWriter("combo.out")));
 
                 n = Integer.valueOf(f.readLine());
-                String allNums = "";
-                for (int i = 1; i <= n; i++) {
-                    allNums = allNums+""+String.valueOf(i);
+                int[] johnCombo = comboFrom(f.readLine());
+                int[] masterCombo = comboFrom(f.readLine());
+
+                ArrayList<String> johnSimilars = getPassingCombos(johnCombo);
+                ArrayList<String> masterSimilars = getPassingCombos(masterCombo);
+
+                TreeSet<String> validCombos = new TreeSet<>();
+                for (String sim : johnSimilars) {
+                    validCombos.add(sim);
+                }
+                for (String sim : masterSimilars) {
+                    validCombos.add(sim);
                 }
 
-                String johnCombo = f.readLine().replaceAll(" ","");
-                String masterCombo = f.readLine().replaceAll(" ", "");
-
-                String[] allCombos = permutations(allNums, 3);
-                int validCount = 0;
-                for (String combo : allCombos) {
-                    if (withinTwo(combo, johnCombo, masterCombo)) validCount++;
-                }
-
-                out.println(validCount);
+                out.println(validCombos.size());
                 out.close();
             }
             catch (Exception e) {
@@ -62,6 +60,38 @@ public class combo {
         catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    static int[] comboFrom(String spaceSep) {
+        String[] vals = spaceSep.split(" ");
+        int[] retVal = new int[vals.length];
+        for (int i = 0; i < retVal.length; i++) {
+            retVal[i] = Integer.valueOf(vals[i]);
+        }
+        return retVal;
+    }
+
+    static ArrayList<String> getPassingCombos(int[] original) {
+        String[] validDiffs = permutations("012",3);
+        String[] validSigns = permutations("-+", 3);
+        ArrayList<String> retVal = new ArrayList<>();
+        for (String diff : validDiffs) {
+            for (String sign : validSigns) {
+                retVal.add(getCombo(original, diff, sign));
+            }
+        }
+        return retVal;
+    }
+
+    static String getCombo(int[] original, String diff, String sign) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < original.length; i++) {
+            int signMod = sign.charAt(i) == '+' ? 1 : -1;
+            int currVal = (original[i]+intValue(diff,i)*signMod);
+            currVal = (currVal+n)%n;
+            sb.append(currVal);
+        }
+        return sb.toString();
     }
 
     static String[] permutations(String original, int size) {
@@ -76,24 +106,7 @@ public class combo {
         return retVal;
     }
 
-    static boolean withinTwo(String thisCombo, String johnCombo, String masterCombo) {
-        return withinTwo(thisCombo, johnCombo) || withinTwo(thisCombo, masterCombo);
-    }
-
-    static boolean withinTwo(String a, String b) {
-        for (int c = 0; c < a.length(); c++) {
-            if (!withinTwo(intValue(a,c),intValue(b,c))) return false;
-        }
-        return true;
-    }
-
-    static boolean withinTwo(int a, int b) {
-        int diff = Math.abs(a-b);
-        return diff <= 2 || diff >= n-2;
-    }
-
     static int intValue(String str, int index) {
-        return Integer.valueOf(str.substring(index,index+1));
+        return Integer.valueOf(str.substring(index, index+1));
     }
-
 }
