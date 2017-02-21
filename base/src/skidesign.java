@@ -37,6 +37,7 @@ public class skidesign {
                 PrintWriter out     = new PrintWriter(new BufferedWriter(new FileWriter("skidesign.out")));
                 
                 n = Integer.valueOf(f.readLine());
+                origHills = new int[n];
                 for (int i = 0; i < n; i++) {
                     origHills[i] = Integer.valueOf(f.readLine());
                 }
@@ -55,12 +56,12 @@ public class skidesign {
     }
 
     /*
-    assume hills is of length n
+    assume hills is sorted and of length n
     */
     static int minCost(int[] hills) {
         int[] safeHills1 = Arrays.copyOf(hills, n);
         Arrays.sort(safeHills1);
-        int thisRange = safeHills1[n]-safeHills1[0];
+        int thisRange = safeHills1[n-1]-safeHills1[0];
         if (thisRange == 17) {
             return evalCost(origHills, safeHills1);
         }
@@ -81,5 +82,20 @@ public class skidesign {
             retVal += diff*diff;
         }
         return retVal;
+    }
+
+    /* Assume hills is sorted except for first element and length n*/
+    static void cleanUpBottom(int[] hills) {
+        for (int i = 1; i < n; i++) {
+            if (hills[i] != original) {
+                int swapHold = hills[i-1];
+                hills[i-1] = hills[0];
+                hills[0] = swapHold;
+            }
+        }
+    }
+
+    static void cleanUpTop(int[] hills) {
+
     }
 }
