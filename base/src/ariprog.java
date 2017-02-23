@@ -31,7 +31,6 @@ public class ariprog {
                 int m = Integer.valueOf(f.readLine());
                 HashSet<Integer> bisquares = bisquares(m);
 
-                //trim endponts
                 int numPrinted = 0;
                 int lastBisquare = 2*m*m;
                 for (int b = 1; b <= lastBisquare/(n-1); b++) {
