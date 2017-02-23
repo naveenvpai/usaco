@@ -9,6 +9,7 @@ import java.util.*;
 
 /*
 Parse.
+
 Find the minimum cost of reducing the range of a list to 17 where the cost is the sum (finalVal-initialVal)^2 for each element
 
 Contextualize.
@@ -21,29 +22,44 @@ tricky because you want to spread out the reductions as much as possible x^2+y^2
 at the same time, you the tail or head may be favorable depending on how close the min/max and second smallest/largest elements are
 (eg. 3 3 3 5 6 7 20)
 
-Recursively find the cost for each possible head/tail reduction along the way (less thinking, less efficiency) 
+Recursively find the cost for each possible head/tail reduction along the way (less thinking, less efficiency)
+
+Repeatedly add to the head (all lowest elements) and subtract from the tail (all highest elements) in some optimal combination.
+can't guarantee to work for every list!
+
+Medianize the list: adjust it so that each element is within optimal range from the median
+doesn't work because median might not give lowest cost for small lists
+
+Idealize the list: find the center of the interval with width 17 that excludes the least number of elements
+and adjust the excluded elements to be within the range (doesn't work bc distance from range counts as well as number changed)
+
+Find best cost: try every such center above finding the resulting cost at each
 
 Errors.
+O(2^n) doesn't finish for n=50 (maybe worse)
 
 */
 
 public class skidesign {
+
     static int n;
-    static int[] origHills;
+    static int idealRange = 17;
+    static int[] hills;
+
     public static void main(String[] args) {
         try {
             try {
                 BufferedReader f    = new BufferedReader(new FileReader("skidesign.in"));
                 PrintWriter out     = new PrintWriter(new BufferedWriter(new FileWriter("skidesign.out")));
-                
-                n = Integer.valueOf(f.readLine());
-                origHills = new int[n];
-                for (int i = 0; i < n; i++) {
-                    origHills[i] = Integer.valueOf(f.readLine());
-                }
-                Arrays.sort(origHills);
 
-                out.println(minCost(origHills));
+                n = Integer.valueOf(f.readLine());
+                hills = new int[n];
+                for (int i = 0; i < n; i++) {
+                    hills[i] = Integer.valueOf(f.readLine());
+                }
+                Arrays.sort(hills);
+
+                out.println(findBestCost(hills));
                 out.close();
             }
             catch (Exception e) {
@@ -55,47 +71,23 @@ public class skidesign {
         }
     }
 
-    /*
-    assume hills is sorted and of length n
-    */
-    static int minCost(int[] hills) {
-        int[] safeHills1 = Arrays.copyOf(hills, n);
-        Arrays.sort(safeHills1);
-        int thisRange = safeHills1[n-1]-safeHills1[0];
-        if (thisRange == 17) {
-            return evalCost(origHills, safeHills1);
-        }
-        int[] safeHills2 = Arrays.copyOf(hills, n);
-        Arrays.sort(safeHills2);
-        safeHills1[0] += 1;
-        safeHills2[n-1] -= 1;
-        return Math.min(minCost(safeHills1), minCost(safeHills2));
-    }
-    
-    /*
-    assume both are sorted and of length n
-    */
-    static int evalCost(int[] hills1, int[] hills2) {
-        int retVal = 0;
-        for (int i = 0; i < n; i++) {
-            int diff = hills1[i] - hills2[i];
-            retVal += diff*diff;
-        }
-        return retVal;
-    }
-
-    /* Assume hills is sorted except for first element and length n*/
-    static void cleanUpBottom(int[] hills) {
-        for (int i = 1; i < n; i++) {
-            if (hills[i] != original) {
-                int swapHold = hills[i-1];
-                hills[i-1] = hills[0];
-                hills[0] = swapHold;
+    static int findBestCost(int[] hills) {
+        int bestCost = Integer.MAX_VALUE;
+        for (int i = hills[0]; i < hills[n-1]; i++) {
+            int currCost = 0;
+            for (int j = 0; j < n; j++) {
+                int diff = 0;
+                if (hills[j] < i) {
+                    diff = i-hills[j];
+                }
+                else if (hills[j] > i+idealRange) {
+                    diff = hills[j]-(i+idealRange);
+                }
+                currCost += diff*diff;
             }
+            bestCost = Math.min(currCost, bestCost);
         }
+        return bestCost;
     }
 
-    static void cleanUpTop(int[] hills) {
-
-    }
 }
