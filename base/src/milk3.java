@@ -21,6 +21,7 @@ Errors.
 public class milk3 {
 
     static int A, B, C;
+    static int[] capacities;
     static HashSet<String> visited;
 
     public static void main(String[] args) {
@@ -33,12 +34,14 @@ public class milk3 {
                 A = Integer.valueOf(inputs[0]);
                 B = Integer.valueOf(inputs[1]);
                 C = Integer.valueOf(inputs[2]);
+                capacities = new int[]{A,B,C};
 
                 TreeSet<Integer> result = new TreeSet<>();
                 visited = new HashSet<>();
                 ArrayList<int[]> currRound = new ArrayList<>();
 
-                int[] initial = new int[]{A,B,C};
+                int[] initial = new int[]{0,0,C};
+                result.add(C);
                 currRound.add(initial);
                 visited.add(stringify(initial));
                 
@@ -69,9 +72,7 @@ public class milk3 {
     static ArrayList<int[]> getNextRound(ArrayList<int[]> currRound) {
         ArrayList<int[]> retVal = new ArrayList<>();
         for (int[] three : currRound) {
-            if (!visited.contains(stringify(three))) {
-                retVal.addAll(getNextSubRound(three));
-            }
+            retVal.addAll(getNextSubRound(three));
         }
         return retVal;
     }
@@ -93,9 +94,11 @@ public class milk3 {
     }
 
     static int[] pour(int[] three, int startIndex, int endIndex, int noChangeIndex) {
-        int[] retVal = new int[3];
-        //add pour logic -> better to copy array or pass in noChangeIndex?
-        return retVal;
+        int[] retVal = Arrays.copyOf(three, 3);
+        int amt = Math.min(three[startIndex], capacities[endIndex]-three[endIndex]);
+        retVal[startIndex] -= amt;
+        retVal[endIndex] += amt;
+        return visited.contains(stringify(retVal)) ? null : retVal;
     }
 
     static void printResult(TreeSet<Integer> tree, PrintWriter out) throws IOException {
