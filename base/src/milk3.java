@@ -107,6 +107,7 @@ public class milk3 {
             out.print(treeIt.next());
             if (treeIt.hasNext()) out.print(" ");
         }
+        out.println();
     }
 
 }
