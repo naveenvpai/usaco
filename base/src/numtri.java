@@ -4,6 +4,7 @@ LANG: JAVA
 TASK: numtri
 */
 
+import java.awt.*;
 import java.io.*;
 import java.lang.reflect.Array;
 import java.util.*;
@@ -37,15 +38,16 @@ public class numtri {
                 }
 
                 int maxSum = 0;
-                ArrayList<int[]> pathPerms = permutations(2, triangle.length-1);
-                for (int[] perm : pathPerms) {
-                    int index = 0;
-                    int currSum = triangle[0][index];
-                    for (int j = 0; j < perm.length; j++) {
-                        index += perm[j];
-                        currSum += triangle[j+1][index];
+                Point[] sums = new Point[]{new Point(triangle[0][0],0)};
+                for (int row = 1; row < triangle.length; row++) {
+                    Point[] nextSums = new Point[sums.length*2];
+                    for (int i = 0; i < nextSums.length; i++) {
+                        Point parent = sums[i/2];
+                        int myIndex = parent.y + i%2;
+                        nextSums[i] = new Point(parent.x+triangle[row][myIndex],myIndex);
+                        if (row == triangle.length-1) maxSum = Math.max(nextSums[i].x, maxSum);
                     }
-                    maxSum = Math.max(maxSum,currSum);
+                    sums = nextSums;
                 }
 
                 out.println(maxSum);
