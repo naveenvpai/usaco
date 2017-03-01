@@ -2,7 +2,7 @@
 ID: pai.nav1
 LANG: JAVA
 TASK: numtri
-*/
+ */
 
 import java.awt.*;
 import java.io.*;
@@ -10,15 +10,15 @@ import java.lang.reflect.Array;
 import java.util.*;
 
 /*
-Parse.
+   Parse.
 
-Contextualize.
+   Contextualize.
 
-Solution ideas.
+   Solution ideas.
 
-Errors.
+   Errors.
 
-*/
+ */
 
 public class numtri {
     public static void main(String[] args) {
@@ -28,26 +28,30 @@ public class numtri {
                 PrintWriter out     = new PrintWriter(new BufferedWriter(new FileWriter("numtri.out")));
 
                 int[][] triangle = new int[Integer.valueOf(f.readLine())][];
+                int max = 0;
                 for (int i = 0; i < triangle.length; i++) {
                     String[] inputs = f.readLine().split(" ");
                     int[] row = new int[inputs.length];
                     for (int j = 0; j < row.length; j++) {
                         row[j] = Integer.valueOf(inputs[j]);
+                        max = Math.max(row[j], max);
                     }
                     triangle[i] = row;
                 }
 
                 int maxSum = 0;
-                Point[] sums = new Point[]{new Point(triangle[0][0],0)};
-                for (int row = 1; row < triangle.length; row++) {
-                    Point[] nextSums = new Point[sums.length*2];
-                    for (int i = 0; i < nextSums.length; i++) {
-                        Point parent = sums[i/2];
-                        int myIndex = parent.y + i%2;
-                        nextSums[i] = new Point(parent.x+triangle[row][myIndex],myIndex);
-                        if (row == triangle.length-1) maxSum = Math.max(nextSums[i].x, maxSum);
+                long idealSum = ((long)max)*((long)triangle.length);
+                long numPerms = (long)Math.pow(2,triangle.length-1);
+                for (long perm = numPerms-1; perm >= 0; perm--) {
+                    String thisSeq = fillZeros(Long.toBinaryString(perm),triangle.length-1);
+                    int index = 0;
+                    int currSum = triangle[0][0];                                 
+                    for (int i = 0; i < thisSeq.length() && i < triangle.length-1; i++) {
+                        index += thisSeq.charAt(i) == '0' ? 0 : 1;
+                        currSum += triangle[i+1][index];
                     }
-                    sums = nextSums;
+                    maxSum = Math.max(currSum, maxSum);
+                    if (maxSum == idealSum) break;
                 }
 
                 out.println(maxSum);
@@ -62,19 +66,12 @@ public class numtri {
         }
     }
 
-    static ArrayList<int[]> permutations(int numIntsToUse, int size) {
-        ArrayList<int[]> retVal = new ArrayList<>();
-        int numPerms = (int)Math.pow(numIntsToUse, size);
-        for (int i = 0 ; i < numPerms; i++) {
-            retVal.add(new int[size]);
+    static String fillZeros(String head, int totalLength) {
+        int remainingLength = totalLength - head.length();
+        StringBuilder zeros = new StringBuilder();
+        for (int i = 0; i < remainingLength; i++) {
+            zeros.append("0");
         }
-        for (int c = 0; c < size; c++) {
-            int numChildPerms = (int)Math.pow(numIntsToUse, size-c-1);
-            for (int i = 0; i < numPerms; i++) {
-                int currIndex = (i/numChildPerms)%numIntsToUse;
-                retVal.get(i)[c] = currIndex;
-            }
-        }
-        return retVal;
+        return zeros.toString() + head;
     }
 }
