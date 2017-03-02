@@ -29,7 +29,7 @@ public class numtri {
                 BufferedReader f    = new BufferedReader(new FileReader("numtri.in"));
                 PrintWriter out     = new PrintWriter(new BufferedWriter(new FileWriter("numtri.out")));
 
-                int[][] triangle = new int[Integer.valueOf(f.readLine())][];
+                triangle = new int[Integer.valueOf(f.readLine())][];
                 memoSum = new HashMap<>();
                 int max = 0;
                 for (int i = 0; i < triangle.length; i++) {
@@ -57,9 +57,9 @@ public class numtri {
         if (row == triangle.length-1) return prevSum;
         Integer lookup = memoSum.get(new Point(row,col));
         if (lookup != null) return lookup + prevSum;
-        int retVal = Math.max(maxSum(row+1,col,prevSum+triangle[row+1][col]), maxSum(row+1, col+1,prevSum+triangle[row+1][col+1]));
-        memoSum.put(new Point(row,col), retVal);
-        return retVal;
+        int sumBelow = Math.max(maxSum(row+1,col,triangle[row+1][col]), maxSum(row+1, col+1,triangle[row+1][col+1]));
+        memoSum.put(new Point(row,col), sumBelow);
+        return prevSum+sumBelow;
     }
 }
 
